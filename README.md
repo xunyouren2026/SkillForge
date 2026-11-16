@@ -45,6 +45,9 @@ python dist/skill-creator/scripts/health_check.py dist/skill-creator --phrasings
 # 召回实测回归断言
 python tests/recall-test/check_recall.py
 
+# 平台内容审核适配（上传前必跑，红线命中须为 0）
+python tests/platform_compat_check.py
+
 # 流水线回归检查（自动优先校验 dist/skill-creator）
 python tests/feature_check.py
 ```
@@ -64,7 +67,8 @@ SkillForge/
 ├── docs/                   # 项目说明
 ├── examples/               # 完整成品范例（供阅读，不进运行时）
 ├── tests/                  # 回归资产（与技能包平级，不进包）
-│   ├── feature_check.py    # 回归检查器（13 段）
+│   ├── feature_check.py    # 回归检查器（14 段）
+│   ├── platform_compat_check.py # 平台内容审核适配检查
 │   ├── credibility-report.md # 校验结论（当前有效版本）
 │   ├── recall-test/        # 召回实测记录与回归断言
 │   ├── semantics-fixtures/ # 语义项自检反向夹具（故意含违规）

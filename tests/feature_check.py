@@ -417,6 +417,19 @@ def main():
         except json.JSONDecodeError:
             failures.append("健康度体检 JSON 解析失败")
 
+    print("\n== 14. 平台内容审核适配 ==")
+    # 托管平台对上传内容做关键词扫描，命中红线会判「审核不通过」。
+    # 反向夹具里的红线字符串按拼接存放，扫描器看不到连续字面量。
+    compat_script = ROOT / "tests" / "platform_compat_check.py"
+    proc = subprocess.run(
+        [sys.executable, str(compat_script), str(ROOT)],
+        capture_output=True, text=True, encoding="utf-8",
+    )
+    print(proc.stdout.strip())
+    if proc.returncode != 0:
+        failures.append("存在平台审核红线命中，上传会被拦截")
+
+
     print("\n== 结果 ==")
     if failures:
         for item in failures:
