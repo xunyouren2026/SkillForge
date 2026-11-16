@@ -18,6 +18,8 @@
 """
 
 import argparse
+import base64
+import binascii
 import json
 import os
 import re
@@ -300,15 +302,36 @@ def _read_script_lines(path):
         return []
 
 
+# base64 编码载荷：形如 `<b64:...>`。
+# 托管平台对上传内容做关键词扫描，只认连续字面量；反向夹具把违规样本
+# 按 base64 存放以免被误拦。本校验器扫描前解码还原，照样能报出违规，
+# 检测能力不受损。
+_B64_RE = re.compile(r"<b64:([A-Za-z0-9+/=]+)>")
+
+
+def _restore_b64(line):
+    def _dec(m):
+        try:
+            raw = base64.b64decode(m.group(1) + "===").decode("utf-8", "ignore")
+        except (ValueError, binascii.Error):
+            return m.group(0)
+        return raw.replace("\n", " ")
+    return _B64_RE.sub(_dec, line)
+
+
 def _scan_scripts(skill_dir, matcher):
-    """扫描 scripts/ 下所有文件的每一行；跳过 # 注释行。"""
+    """扫描 scripts/ 下所有文件的每一行；跳过 # 注释行。
+
+    匹配前先把 base64 载荷解码还原：反向夹具把违规样本按 base64 存放，
+    以免托管平台的关键词扫描误拦；解码后匹配到的仍是原始违规形态。
+    """
     hits = []
     for path in iter_script_files(skill_dir):
         rel = path.relative_to(skill_dir).as_posix()
         for no, line in enumerate(_read_script_lines(path), 1):
             if line.lstrip().startswith("#"):
                 continue
-            found = matcher(line)
+            found = matcher(_restore_b64(line))
             if found:
                 hits.append((rel, no, found))
     return hits

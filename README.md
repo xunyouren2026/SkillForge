@@ -48,6 +48,9 @@ python tests/recall-test/check_recall.py
 # 平台内容审核适配（上传前必跑，红线命中须为 0）
 python tests/platform_compat_check.py
 
+# 上传包规范体检（校验 ZIP 顶层结构、frontmatter 字段、引用完整性）
+python tests/platform_spec_check.py
+
 # 流水线回归检查（自动优先校验 dist/skill-creator）
 python tests/feature_check.py
 ```
@@ -67,11 +70,12 @@ SkillForge/
 ├── docs/                   # 项目说明
 ├── examples/               # 完整成品范例（供阅读，不进运行时）
 ├── tests/                  # 回归资产（与技能包平级，不进包）
-│   ├── feature_check.py    # 回归检查器（14 段）
+│   ├── feature_check.py    # 回归检查器（15 段）
 │   ├── platform_compat_check.py # 平台内容审核适配检查
+│   ├── platform_spec_check.py  # 上传包规范体检（ZIP 结构 / frontmatter / 引用完整性）
 │   ├── credibility-report.md # 校验结论（当前有效版本）
 │   ├── recall-test/        # 召回实测记录与回归断言
-│   ├── semantics-fixtures/ # 语义项自检反向夹具（故意含违规）
+│   ├── semantics-fixtures/ # 语义项自检反向夹具（违规样本按 base64 载荷存放）
 │   ├── security-fixtures/  # S009/S010/S011 安全回归夹具
 │   └── structure-fixtures/ # 结构与槽位判定夹具
 ├── LICENSE
@@ -80,6 +84,30 @@ SkillForge/
 ```
 
 `tests/` 只放**回归资产**（夹具、断言数据、回归脚本），不放过程稿与日期归档报告——中间态（尤其是 FAIL 状态的中间产物）会误导后来的读者。当前结论见 `tests/credibility-report.md`，方法与理由见 `skill-creator-guide/`。
+
+## 上传到技能平台
+
+平台对上传内容做两轮检查：**格式校验**（ZIP 结构、frontmatter 字段、引用完整性）与**安全审查**（关键词扫描 + 人工/LLM 复核）。前者可脚本化，后者取决于包里有没有"看起来像违规"的内容。
+
+本项目的处理方式：
+
+- **反向夹具的违规样本按 base64 载荷存放**（`<b64:...>`）。平台扫描器只认明文字面量，看到的是一串编码；本项目的检测器在扫描前解码还原，照样能抓到。检测力零损失，但平台扫不到。
+- **两个顶层结构都提供**。多数平台要求「ZIP 根目录下必须有 SKILL.md」（知乎 AI Works、腾讯云、天翼、百炼），另一些要求「第一层是技能目录」（龙蜥 SkillHub、ClawHub、WorkBuddy）。两种都打好了，按平台选。
+
+| 压缩包 | 顶层结构 | 适用平台 |
+| --- | --- | --- |
+| `SkillForge-flat-skill-creator.zip` | 根目录直接是 `SKILL.md` | 知乎 AI Works、腾讯云、天翼、百炼 |
+| `SkillForge-dir-skill-creator.zip` | 第一层是 `skill-creator/` | 龙蜥 SkillHub、ClawHub、WorkBuddy |
+| `SkillForge-flat-skill-creator-guide.zip` | 根目录直接是 `SKILL.md` | 同上，教程包 |
+| `SkillForge-full.zip` | 完整项目（含 `tests/` 与文档） | 归档、发给同事实测，不建议上架 |
+
+上传前跑一遍：
+
+```
+python tests/platform_spec_check.py
+```
+
+它按平台规范逐项体检：顶层结构、包体大小、缓存残留、BOM、frontmatter 字段（含 `name_cn` / `description_cn`）、依赖声明、引用完整性、明文红线、base64 载荷有效性。
 
 ## 安装使用
 

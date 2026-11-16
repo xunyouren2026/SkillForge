@@ -1,0 +1,11 @@
+# 本技能的脚本只依赖 Python 标准库，无第三方依赖。
+# 声明本文件是为了让平台的依赖检测器能读到一份显式清单。
+#
+# Python 版本要求：>= 3.8
+#
+# 校验命令（全部只读，不修改被检目录）：
+#   python scripts/validate_structure.py <技能目录>
+#   python scripts/validate_skill.py <技能目录>
+#   python scripts/check_triggers.py --skill <技能目录> --phrasings <说法清单>
+#   python scripts/check_semantics.py <技能目录>
+#   python scripts/health_check.py <技能目录>
