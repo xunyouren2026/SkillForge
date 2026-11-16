@@ -1,0 +1,10 @@
+{"ts":"2026-11-13T09:12:00+08:00","skill":"weekly-report","query":"把本周数据整理成周报","invoked":true,"success":true,"turns":3,"error":""}
+{"ts":"2026-11-13T10:05:00+08:00","skill":"weekly-report","query":"这周的周报直接生成一下","invoked":true,"success":true,"turns":4,"error":""}
+{"ts":"2026-11-13T14:30:00+08:00","skill":"weekly-report","query":"把上周的客户反馈汇总成周报","invoked":true,"success":false,"turns":5,"error":"缺少输入表格"}
+{"ts":"2026-11-14T09:00:00+08:00","skill":"weekly-report","query":"这个流程以后固定下来","invoked":false,"success":false,"turns":1,"error":"未触发"}
+{"ts":"2026-11-14T11:20:00+08:00","skill":"weekly-report","query":"接着上次的模板继续写周报","invoked":true,"success":true,"turns":3,"error":""}
+{"ts":"2026-11-14T15:45:00+08:00","skill":"weekly-report","query":"把数据清一遍再出周报","invoked":true,"success":false,"turns":6,"error":"输出字段不完整"}
+{"ts":"2026-11-14T17:10:00+08:00","skill":"weekly-report","query":"按老格式出本周周报","invoked":true,"success":true,"turns":4,"error":""}
+{"ts":"2026-11-15T08:50:00+08:00","skill":"data-audit","query":"检查这份表的字段是否齐全","invoked":true,"success":true,"turns":2,"error":""}
+{"ts":"2026-11-15T10:30:00+08:00","skill":"data-audit","query":"今天天气怎么样","invoked":false,"success":false,"turns":1,"error":"未触发"}
+{"ts":"2026-11-15T16:00:00+08:00","skill":"data-audit","query":"把这份表格字段核一遍","invoked":true,"success":false,"turns":4,"error":"缺少输入表格"}

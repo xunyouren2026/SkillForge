@@ -1,0 +1,26 @@
+# Python 缓存与字节码
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# 体检与实测报告（运行时产物，按日期归档，不入库）
+tests/health_*.md
+tests/recall-test/*.output.json
+tests/*-report_*.md
+tests/history/
+
+# 编辑器与操作系统
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Windows 挂起目录残留（Windows 无法删除时的临时残留）
+cleanup-pending/
